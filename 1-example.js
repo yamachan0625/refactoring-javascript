@@ -25,9 +25,13 @@ function statement(invoice, plays) {
     minimumFractionDigits: 2,
   }).format;
 
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
+  }
+
   function amountFor(aPerformance /** 名前から型がわかるようにする */, play) {
     let result = 0; // 関数の戻り値を示す面数名は常にresultにすると役割が明確になる
-    switch (play.type) {
+    switch (playFor(aPerformance)) {
       case 'tragedy': {
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -44,13 +48,9 @@ function statement(invoice, plays) {
         break;
       }
       default:
-        throw new Error(`unknown type: ${play.type}`);
+        throw new Error(`unknown type: ${playFor(aPerformance).type}`);
     }
     return result;
-  }
-
-  function playFor(aPerformance) {
-    return plays[aPerformance.playID];
   }
 
   for (let perf of invoice.performances) {
