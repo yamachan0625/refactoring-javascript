@@ -23,17 +23,18 @@ function volumeCreditsFor(aPerformance) {
   return result;
 }
 
+function usd(aNumber) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  }).format(aNumber / 100); // フォーマット用の関数側に移動
+}
+
 function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-
-  //言語に依存した数値書式を可能にするオブジェクトのコンストラクター
-  const format = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format;
 
   function playFor(aPerformance) {
     return plays[aPerformance.playID];
@@ -66,13 +67,13 @@ function statement(invoice, plays) {
   for (let perf of invoice.performances) {
     volumeCredits += volumeCreditsFor(perf);
     //注文の内訳を表示
-    result += ` ${playFor(perf).name}:${format(amountFor(perf) / 100)} (${
+    result += ` ${playFor(perf).name}:${usd(amountFor(perf))} (${
       perf.audience
     } seats) \n`;
     totalAmount += amountFor(perf);
   }
 
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  result += `Amount owed is ${usd(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
   return result;
 }
