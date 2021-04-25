@@ -65,12 +65,16 @@ function statement(invoice, plays) {
   }
 
   for (let perf of invoice.performances) {
-    volumeCredits += volumeCreditsFor(perf);
     //注文の内訳を表示
     result += ` ${playFor(perf).name}:${usd(amountFor(perf))} (${
       perf.audience
     } seats) \n`;
     totalAmount += amountFor(perf);
+  }
+
+  let volumeCredits = 0; // ステートメントのスライドを行い,変数宣言をループの直前に移動させる
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
   }
 
   result += `Amount owed is ${usd(totalAmount)}\n`;
