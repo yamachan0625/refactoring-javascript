@@ -13,6 +13,16 @@ const invoice = {
   ],
 };
 
+function volumeCreditsFor(perf) {
+  let volumeCredits = 0;
+  volumeCredits += Math.max(perf.audience - 30, 0);
+  // 喜劇の時は10人につきさらにポイントを加算
+  if ('comedy' === playFor(perf).type)
+    volumeCredits += Math.floor(perf.audience / 5);
+
+  return volumeCredits;
+}
+
 function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
@@ -54,18 +64,12 @@ function statement(invoice, plays) {
   }
 
   for (let perf of invoice.performances) {
-    let thisAmount = amountFor(perf);
-
-    // ボリュームの得点のポイントを加算
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // 喜劇の時は10人につきさらにポイントを加算
-    if ('comedy' === playFor(perf).type)
-      volumeCredits += Math.floor(perf.audience / 5);
+    volumeCredits += volumeCreditsFor(perf);
     //注文の内訳を表示
-    result += ` ${playFor(perf).name}:${format(thisAmount / 100)} (${
+    result += ` ${playFor(perf).name}:${format(amountFor(perf) / 100)} (${
       perf.audience
     } seats) \n`;
-    totalAmount += thisAmount;
+    totalAmount += amountFor(perf);
   }
 
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
