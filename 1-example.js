@@ -14,6 +14,10 @@ const invoice = {
 };
 
 function statement(invoice, plays) {
+  renderPlainText(invoice, plays);
+}
+
+function renderPlainText(invoice, plays) {
   let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
     //注文の内訳を表示
