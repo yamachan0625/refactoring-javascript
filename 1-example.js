@@ -14,13 +14,17 @@ const invoice = {
 };
 
 function statement(invoice, plays) {
+  return renderPlainText(createStatementData(invoice, plays));
+}
+
+function createStatementData(invoice, plays) {
   const statementData = {};
   statementData.customer = invoice.customer;
   statementData.performances = invoice.performances.map(enrichPerformance);
   statementData.totalAmount = totalAmount(statementData);
   statementData.totalVolumeCredits = totalVolumeCredits(statementData);
 
-  return renderPlainText(statementData, invoice, plays);
+  return statementData;
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance);
@@ -69,20 +73,11 @@ function statement(invoice, plays) {
   }
 
   function totalAmount(data) {
-    let result = 0;
-    for (let perf of data.performances) {
-      result += perf.amount;
-    }
-    return result;
+    return data.performances.reduce((total, p) => total + p.amount, 0);
   }
 
   function totalVolumeCredits(data) {
-    let volumeCredits = 0;
-    for (let perf of data.performances) {
-      volumeCredits += perf.volumeCredits;
-    }
-
-    return volumeCredits;
+    return data.performances.reduce((total, p) => total + p.volumeCredits, 0);
   }
 }
 
