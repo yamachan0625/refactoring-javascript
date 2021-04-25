@@ -89,9 +89,7 @@ function statement(invoice, plays) {
     } seats) \n`;
   }
 
-  let totalAmount = appleSauce();
-
-  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `Amount owed is ${usd(appleSauce())}\n`;
   result += `You earned ${totalVolumeCredits()} credits\n`;
   return result;
 }
