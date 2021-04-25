@@ -58,5 +58,5 @@ function renderHtml(data) {
   return result;
 }
 
-// console.log(statement(invoice, plays));
+console.log(statement(invoice, plays));
 console.log(htmlStatement(invoice, plays));
