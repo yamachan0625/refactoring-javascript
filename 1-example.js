@@ -1,5 +1,3 @@
-const { func } = require('prop-types');
-
 const plays = {
   hamlet: { name: 'hamlet', type: 'tragedy' },
   aslike: { name: 'As You Like It', type: 'comedy' },
@@ -51,8 +49,6 @@ function totalAmount() {
 }
 
 function statement(invoice, plays) {
-  let result = `Statement for ${invoice.customer}\n`;
-
   function playFor(aPerformance) {
     return plays[aPerformance.playID];
   }
@@ -81,6 +77,7 @@ function statement(invoice, plays) {
     return result;
   }
 
+  let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
     //注文の内訳を表示
     result += ` ${playFor(perf).name}:${usd(amountFor(perf))} (${
