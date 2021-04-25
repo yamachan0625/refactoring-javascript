@@ -14,11 +14,13 @@ const invoice = {
 };
 
 function statement(invoice, plays) {
-  renderPlainText(invoice, plays);
+  const statementData = {};
+  statementData.customer = invoice.customer;
+  renderPlainText(statementData, invoice, plays);
 }
 
-function renderPlainText(invoice, plays) {
-  let result = `Statement for ${invoice.customer}\n`;
+function renderPlainText(data, invoice, plays) {
+  let result = `Statement for ${data.customer}\n`;
   for (let perf of invoice.performances) {
     //注文の内訳を表示
     result += ` ${playFor(perf).name}:${usd(amountFor(perf))} (${
