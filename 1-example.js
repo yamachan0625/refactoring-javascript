@@ -29,7 +29,7 @@ function statement(invoice, plays) {
     return plays[aPerformance.playID];
   }
 
-  function amountFor(aPerformance /** 名前から型がわかるようにする */, play) {
+  function amountFor(aPerformance /** 名前から型がわかるようにする */) {
     let result = 0; // 関数の戻り値を示す面数名は常にresultにすると役割が明確になる
     switch (playFor(aPerformance)) {
       case 'tragedy': {
@@ -54,7 +54,7 @@ function statement(invoice, plays) {
   }
 
   for (let perf of invoice.performances) {
-    let thisAmount = amountFor(perf, playFor(perf));
+    let thisAmount = amountFor(perf);
 
     // ボリュームの得点のポイントを加算
     volumeCredits += Math.max(perf.audience - 30, 0);
