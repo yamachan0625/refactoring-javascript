@@ -17,10 +17,16 @@ function statement(invoice, plays) {
   const statementData = {};
   statementData.customer = invoice.customer;
   statementData.performances = invoice.performances.map(enrichPerformance);
-  renderPlainText(statementData, invoice, plays);
+  return renderPlainText(statementData, invoice, plays);
+
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance);
+    result.play = playFor(result);
     return result;
+  }
+
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
   }
 }
 
@@ -28,7 +34,7 @@ function renderPlainText(data, plays) {
   let result = `Statement for ${data.customer}\n`;
   for (let perf of data.performances) {
     //注文の内訳を表示
-    result += ` ${playFor(perf).name}:${usd(amountFor(perf))} (${
+    result += ` ${perf.play.name}:${usd(amountFor(perf))} (${
       perf.audience
     } seats) \n`;
   }
@@ -66,19 +72,15 @@ function renderPlainText(data, plays) {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
     // 喜劇の時は10人につきさらにポイントを加算
-    if ('comedy' === playFor(aPerformance).type)
+    if ('comedy' === aPerformance.play.type)
       result += Math.floor(aPerformance.audience / 5);
 
     return result;
   }
 
-  function playFor(aPerformance) {
-    return plays[aPerformance.playID];
-  }
-
   function amountFor(aPerformance /** 名前から型がわかるようにする */) {
     let result = 0; // 関数の戻り値を示す面数名は常にresultにすると役割が明確になる
-    switch (playFor(aPerformance).type) {
+    switch (aPerformance.play.type) {
       case 'tragedy': {
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -95,7 +97,7 @@ function renderPlainText(data, plays) {
         break;
       }
       default:
-        throw new Error(`unknown type: ${playFor(aPerformance).type}`);
+        throw new Error(`unknown type: ${aPerformance.play.type}`);
     }
     return result;
   }
